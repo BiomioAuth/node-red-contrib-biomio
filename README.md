@@ -8,10 +8,8 @@ Install
 
 Run the following command in the root directory of your Node-RED install
 
-    npm install node-red-contrib-biomio
-
+`npm install git+https://git@bitbucket.org:biomio/biomio-node.git#v1.1.0`
 
 Usage
 -----
-
-todo
+Please look at repository [biomio-node-red-example](https://bitbucket.org/biomio/biomio-node-red-example)
