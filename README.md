@@ -1,7 +1,7 @@
 node-red-contrib-biomio
 ====================
 
-A <a href="http://nodered.org" target="_new">Node-RED</a> node that when triggered runs Biomio's authentication.
+A [Node-Red](http://nodered.org) node that performs Biomio's authentication.
 
 Install
 -------
