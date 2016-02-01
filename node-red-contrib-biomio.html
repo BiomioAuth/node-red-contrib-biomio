@@ -9,7 +9,30 @@
     </div>
     <div class="form-row">
         <label for="node-input-userToken"><i class="fa fa-user"></i> User token</label>
-        <input type="text" id="node-input-userToken" placeholder="user token"  style="width: 300px;">
+
+        <select id="node-input-userTokenSource" style="width: 315px;">
+            <option value="input" selected="selected">token sets in configuration</option>
+            <option value="msg">token comes from previous node</option>
+        </select>
+        <input type="hidden" id="node-input-userToken">
+    </div>
+
+    <div class="form-row" id="userTokenSource-msg" style="display: none">
+      <div style="width: 315px;margin-left: 104px;">
+        <div class="node-input-userToken-suffix" style="float: left; width: 30px;line-height: 34px;">msg.</div>
+        <input type="text" value="payload" id="userTokenMsg" style="width: 270px;">
+      </div>
+    </div>
+
+    <div class="form-row" id="userTokenSource-input" style="display: block">
+      <div style="width: 315px;margin-left: 104px;">
+        <input type="text" id="userTokenInput" style="width: 300px;">
+      </div>
+    </div>
+
+    <div class="form-tips">
+      <p>AppId & AppKey you can get from <a href="https://biom.io" target="_blank">https://biom.io</a> site.</p>
+      <p>User token is an email of registered user in our system, you can set it here or get from previous node inside an object "msg"</p>
     </div>
     <br/>
     <div class="form-row">
@@ -28,9 +51,10 @@
         color: "rgba(250,126,92,0.93)",
         defaults: {
             name: {value: ""},
-            appId: {value: "b0ced4ecb22ceb8ee0116804b2f87256"},
-            appKey: {value: ""},
-            userToken: {value: ""}
+            appId: {value: "", required:true},
+            appKey: {value: "", required:true},
+            userToken: {value: "", required:true},
+            userTokenSource: {value: "input"}
         },
         inputs: 1,
         outputs: 1,
@@ -40,6 +64,62 @@
         },
         labelStyle: function() {
             return this.name ? "node_label_italic" : "";
+        },
+        oneditprepare: function() {
+            var self = this;
+
+            var $source = $('#node-input-userTokenSource');
+            var $sourceInput = $('#userTokenSource-input');
+            var $sourceMsg = $('#userTokenSource-msg');
+            var $input = $('#node-input-userToken');
+
+            function setSourceInput() {
+                $source.val('input');
+                $sourceMsg.hide();
+                $sourceInput.show();
+                self.userTokenSource = 'input';
+                $('input', $sourceInput).val($input.val());
+            }
+
+            function setSourceMsg() {
+                $source.val('msg');
+                $sourceInput.hide();
+                $sourceMsg.show();
+                self.userTokenSource = 'msg';
+                $('input', $sourceMsg).val($input.val());
+            }
+
+            if (self.userTokenSource === undefined) {
+                self.userTokenSource = 'input';
+            }
+
+            if (self.userTokenSource === 'input') {
+                setSourceInput();
+            } else {
+                setSourceMsg();
+            }
+
+            $source.change(function() {
+                var source = $("option:selected", $source).val();
+                if (source === 'input') {
+                    setSourceInput();
+                } else {
+                    setSourceMsg();
+                }
+            });
+        },
+        oneditsave: function() {
+            var self = this;
+
+            var userToken = '';
+            if (self.userTokenSource === 'input') {
+                userToken = $('#userTokenInput').val();
+            } else {
+                userToken = $('#userTokenMsg').val();
+            }
+
+            self.userToken = userToken;
+            $('#node-input-userToken').val(userToken);
         }
     });
 </script>

@@ -4,18 +4,20 @@ module.exports = function(RED) {
   "use strict";
 
   function BiomioAuthNode(options) {
+    var node = this;
     RED.nodes.createNode(this, options);
 
-    this.gate = "wss://gate.biom.io:8080/websocket"; // production
-    this.appId = options.appId;
-    this.appKey = options.appKey;
-    this.userToken = options.userToken;
+    node.gate = "wss://gate.biom.io:8080/websocket"; // production
+    node.appId = options.appId;
+    node.appKey = options.appKey;
+    node.userToken = options.userToken;
+    node.userTokenSource = options.userTokenSource;
 
     /** prepare Gate's configuration */
     var params = {
-      gateURL: this.gate,
-      appId: this.appId,
-      appKey: this.appKey,
+      gateURL: node.gate,
+      appId: node.appId,
+      appKey: node.appKey,
       appType: 'extension',
 
       /* optional parameters */
@@ -24,31 +26,42 @@ module.exports = function(RED) {
       devId: 'node-red-contrib-biomio'
     }
 
-    var node = this;
     node.conn = null;
     node.inprogress = false;
 
     this.on("input", function(msg) {
-      node.log('on input', msg);
+      console.log('on input', msg);
+      node.status({});
 
       if (node.inprogress) {
-        node.log('Already started!');
-        node.send('Already started!');
+        node.send({result: false, status: "info", msg: "Authentication already in progress!"});
         return;
       }
 
       if (node.conn) {
-        node.log('FINISH');
+        console.log('FINISH');
         node.conn.finish();
       }
 
-      node.conn = new BiomioNode(node.userToken, params, function() {
+      var userToken = node.userToken;
+
+      if (node.userTokenSource === 'msg') {
+        if (node.userToken && msg[node.userToken]) {
+          userToken = msg[node.userToken];
+        } else {
+          node.send({result: false, status: "error", msg: "Node is not configured properly!"});
+          node.status({fill:"red", shape:"dot", text:"configuration is wrong!"});
+          return;
+        }
+      }
+
+      node.conn = new BiomioNode(userToken, params, function() {
         node.inprogress = true;
         node.status({fill:"blue", shape:"dot", text:"connected"});
 
         /** check if user already registered */
         node.conn.user_exists(function(exists) {
-          node.send('User exist: ' + exists);
+          node.send({result: false, status: "info", msg: "User is exist"});
 
           if (exists) {
             node.status({fill:"blue", shape:"dot", text:"user is exist"});
@@ -60,24 +73,21 @@ module.exports = function(RED) {
                 /* callback will be called few times: in_progress, completed */
                 if (result.status === 'completed') {
                   node.inprogress = false;
-                  var msg = 'Authentication is successful';
-                  node.send(msg);
+                  node.send({result: true, status: "completed", msg: "Authentication is successful"});
                 } else {
                   node.send(result);
                 }
 
               });
             } catch(ex) {
-              node.status({fill:"red", shape:"dot", text:"esception!"});
               node.inprogress = false;
-              var msg = 'EXCEPTION: ' + ex;
-              node.send(msg);
+              node.status({fill:"red", shape:"dot", text:"exception!"});
+              node.send({result: false, status: "error", msg: "Exception: " + ex});
             }
           } else {
-            node.status({fill:"red", shape:"dot", text:"user isn't exist"});
             node.inprogress = false;
-            var msg = 'User is not found!';
-            node.send(msg);
+            node.status({fill:"red", shape:"dot", text:"user isn't exist"});
+            node.send({result: false, status: "completed", msg: "user is not found"});
           }
         });
       });
