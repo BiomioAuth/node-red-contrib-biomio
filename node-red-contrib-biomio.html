@@ -1,0 +1,45 @@
+<script type="text/x-red" data-template-name="biomio auth">
+    <div class="form-row">
+        <label for="node-input-appId"><i class="fa fa-file"></i> App ID</label>
+        <input type="text" id="node-input-appId" placeholder="app Id"  style="width: 300px;">
+    </div>
+    <div class="form-row">
+        <label for="node-input-appKey"><i class="fa fa-key"></i> App Key</label>
+        <textarea id="node-input-appKey" style="width: 300px; height: 150px"></textarea>
+    </div>
+    <div class="form-row">
+        <label for="node-input-userToken"><i class="fa fa-user"></i> User token</label>
+        <input type="text" id="node-input-userToken" placeholder="user token"  style="width: 300px;">
+    </div>
+    <br/>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name" style="width: 300px;">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="biomio auth">
+    <p>Run Biomio authentication.</p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('biomio auth',{
+        category: 'function',
+        color: "rgba(250,126,92,0.93)",
+        defaults: {
+            name: {value: ""},
+            appId: {value: "b0ced4ecb22ceb8ee0116804b2f87256"},
+            appKey: {value: ""},
+            userToken: {value: ""}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "debug.png",
+        label: function() {
+            return this.name || "biomio auth";
+        },
+        labelStyle: function() {
+            return this.name ? "node_label_italic" : "";
+        }
+    });
+</script>
