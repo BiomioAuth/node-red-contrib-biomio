@@ -13,7 +13,8 @@ Run the following command in the root directory of your Node-RED install
 Before using this node, you should register on our site [https://biom.io](https://biom.io)
 and get **appId**, **appKey**
 
-after that add our node to your flow and configure it.
+after that, add our node to your flow and configure it.
+
 
 ## Usage
 

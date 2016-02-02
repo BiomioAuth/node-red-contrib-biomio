@@ -5,10 +5,15 @@
   "dependencies": {
     "biomio-node": "git+https://git@bitbucket.org:biomio/biomio-node.git#v1.1.0"
   },
-  "keywords": [ "node-red" ],
+  "keywords": [ "node-red", "authentication" ],
   "node-red": {
     "nodes": {
       "node-red-contrib-biomio": "node-red-contrib-biomio.js"
     }
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://bitbucket.org/biomio/node-red-contrib-biomio.git"
   }
 }
