@@ -1,11 +1,14 @@
 {
   "name": "node-red-contrib-biomio",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Biomio authentication for node-red",
   "dependencies": {
     "biomio-node": "git+https://git@bitbucket.org:biomio/biomio-node.git#v1.1.0"
   },
-  "keywords": [ "node-red", "authentication" ],
+  "keywords": [
+    "node-red",
+    "authentication"
+  ],
   "node-red": {
     "nodes": {
       "node-red-contrib-biomio": "node-red-contrib-biomio.js"
