@@ -1,15 +1,20 @@
-node-red-contrib-biomio
-====================
+# node-red-contrib-biomio
 
 A [Node-Red](http://nodered.org) node that performs Biomio's authentication.
 
-Install
--------
+## Install
 
 Run the following command in the root directory of your Node-RED install
 
-`npm install git+https://git@bitbucket.org:biomio/biomio-node.git#v1.1.0`
+  npm install node-red-contrib-biomio
 
-Usage
------
+## Configure
+
+Before using this node, you should register on our site [https://biom.io](https://biom.io)
+and get **appId**, **appKey**
+
+after that add our node to your flow and configure it.
+
+## Usage
+
 Please look at repository [biomio-node-red-example](https://bitbucket.org/biomio/biomio-node-red-example)
